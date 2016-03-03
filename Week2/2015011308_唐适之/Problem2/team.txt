@@ -1,0 +1,90 @@
+Team 1:
+id: 2013011665, email: yuanxc13@mails.tsinghua.edu.cn
+id: 2015011300, email: xzh15@mails.tsinghua.edu.cn
+id: 2015011345, email: jiayq15@mails.tsinghua.edu.cn
+
+Team 2:
+id: 2015011255, email: zzs15@mails.tsinghua.edu.cn
+id: 2015011312, email: yl-wang15@mails.tsinghua.edu.cn
+id: 2014010845, email: x-zho14@mails.tsinghua.edu.cn
+
+Team 3:
+id: 2015011318, email: kmy15@mails.tsinghua.edu.cn
+id: 2015011334, email: xuyi15@mails.tsinghua.edu.cn
+id: 2015011249, email: gyh15@mails.tsinghua.edu.cn
+
+Team 4:
+id: 2014012283, email: myc14@mails.tsinghua.edu.cn
+id: 2015011299, email: hq15@mails.tsinghua.edu.cn
+id: 2015011294, email: dongym15@mails.tsinghua.edu.cn
+
+Team 5:
+id: 2014011294, email: xudy14@mails.tsinghua.edu.cn
+id: 2015011265, email: yujp15@mails.tsinghua.edu.cn
+id: 2015011254, email: liumt15@mails.tsinghua.edu.cn
+
+Team 6:
+id: 2015011357, email: pyx15@mails.tsinghua.edu.cn
+id: 2015011343, email: chenyu15@mails.tsinghua.edu.cn
+id: 2015011367, email: yuyue15@mails.tsinghua.edu.cn
+
+Team 7:
+id: 2014011546, email: flj14@mails.tsinghua.edu.cn
+id: 2015011273, email: kzf15@mails.tsinghua.edu.cn
+id: 2015011267, email: songsh15@mails.tsinghua.edu.cn
+
+Team 8:
+id: 2015011308, email: tsz15@mails.tsinghua.edu.cn
+id: 2016403003, email: dys16@mails.tsinghua.edu.cn
+id: 2015011295, email: zhang-yn15@mails.tsinghua.edu.cn
+
+Team 9:
+id: 2014010646, email: ctc14@mails.tsinghua.edu.cn
+id: 2015011352, email: zhangwei15@mails.tsinghua.edu.cn
+id: 2015011341, email: cyb15@mails.tsinghua.edu.cn
+
+Team 10:
+id: 2015011321, email: lizelong15@mails.tsinghua.edu.cn
+id: 2015011305, email: sth15@mails.tsinghua.edu.cn
+id: 2015011276, email: zhujh15@mails.tsinghua.edu.cn
+
+Team 11:
+id: 2015011280, email: zhanghm15@mails.tsinghua.edu.cn
+id: 2014011436, email: ztc14@mails.tsinghua.edu.cn
+id: 2015011275, email: yzjc15@mails.tsinghua.edu.cn
+
+Team 12:
+id: 2014010257, email: dujj14@mails.tsinghua.edu.cn
+id: 2015011281, email: liuxh15@mails.tsinghua.edu.cn
+id: 2015011360, email: wuhj15@mails.tsinghua.edu.cn
+
+Team 13:
+id: 2015011366, email: mhr15@mails.tsinghua.edu.cn
+id: 2015011376, email: yuxj15@mails.tsinghua.edu.cn
+id: 2015011335, email: jiayk15@mails.tsinghua.edu.cn
+
+Team 14:
+id: 2014011561, email: zhangxinyang14@mails.tsinghua.edu.cn
+id: 2015011311, email: zhangps15@mails.tsinghua.edu.cn
+id: 2015011292, email: tanyj15@mails.tsinghua.edu.cn
+
+Team 15:
+id: 2014012276, email: w-s14@mails.tsinghua.edu.cn
+id: 2015011257, email: liu-mh15@mails.tsinghua.edu.cn
+id: 2015011271, email: ljk15@mails.tsinghua.edu.cn
+
+Team 16:
+id: 2015011310, email: shiyi-li15@mails.tsinghua.edu.cn
+id: 2015011287, email: fmj15@mails.tsinghua.edu.cn
+id: 2015400489, email: dauh10@mails.tsinghua.edu.cn
+
+Team 17:
+id: 2015011369, email: wangys15@mails.tsinghua.edu.cn
+id: 2014011302, email: hrb14@mails.tsinghua.edu.cn
+id: 2014011449, email: fjy14@mails.tsinghua.edu.cn
+
+Team 18:
+id: 2015011313, email: xujj15@mails.tsinghua.edu.cn
+id: 2015011353, email: yyb15@mails.tsinghua.edu.cn
+id: 2015011315, email: ypr15@mails.tsinghua.edu.cn
+
