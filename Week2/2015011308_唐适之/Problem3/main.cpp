@@ -34,5 +34,6 @@ int main()
     std::cout << "================" << std::endl;
     std::cout << "Cannot return them again" << std::endl;
     V1.return_back(), V2.return_back();
+    return 0;
 }
 
