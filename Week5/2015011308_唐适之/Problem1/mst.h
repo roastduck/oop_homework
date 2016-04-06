@@ -52,7 +52,7 @@ private:
     /**
      * second = true means found
      */
-    static std::pair<Graph::Edge, bool> dfs(const Graph &tree, const Graph &fixIn, int x, int y, int last=-1);
+    static std::pair<Graph::Edge, bool> dfsMinEdge(const Graph &tree, const Graph &fixIn, int x, int y, int last=-1);
 };
 
 #endif // INCLUDED_MST_H

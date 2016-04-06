@@ -67,7 +67,7 @@ std::pair<MST::Solution, MST::Solution> MST::gen_new_solution(const Graph &g, co
     for (const Graph::Edge &e : g.get_all_edges())
         if (! cur.tree.edge_exists(e.x, e.y) && ! cur.fixOut.edge_exists(e.x, e.y))
         {
-            Graph::Edge f = dfs(cur.tree, cur.fixIn, e.x, e.y).first;
+            Graph::Edge f = dfsMinEdge(cur.tree, cur.fixIn, e.x, e.y).first;
             if (! std::isfinite(f.w)) continue;
             if (e.w-f.w < add.w-del.w)
                 add = e, del = f;
@@ -89,14 +89,14 @@ std::pair<MST::Solution, MST::Solution> MST::gen_new_solution(const Graph &g, co
     return ret;
 }
 
-std::pair<Graph::Edge, bool> MST::dfs(const Graph &tree, const Graph &fixIn, int x, int y, int last)
+std::pair<Graph::Edge, bool> MST::dfsMinEdge(const Graph &tree, const Graph &fixIn, int x, int y, int last)
 {
     if (x == y) return std::make_pair(Graph::Edge(0, 0, -INFINITY), true);
     for (const Graph::Edge &e : tree.get_vertex_edges(x))
     {
         int next = (e.x==x ? e.y : e.x);
         if (next == last) continue;
-        std::pair<Graph::Edge, bool> got = dfs(tree, fixIn, next, y, x);
+        std::pair<Graph::Edge, bool> got = dfsMinEdge(tree, fixIn, next, y, x);
         if (! got.second) continue;
         if (fixIn.edge_exists(e.x, e.y))
             return got;
