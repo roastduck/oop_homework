@@ -1,10 +1,14 @@
 #include <fstream>
 #include <iostream>
+#include <exception>
+#include <stdexcept>
 #include "Matrix.h"
 
 void Matrix::load(const std::string &filename)
 {
     std::ifstream fs(filename.c_str());
+    if (! fs)
+        throw std::runtime_error("fail to load from " + filename);
     fs >> row >> col;
     data.resize(row * col);
     for (int i=0; i<row*col; i++)
@@ -43,6 +47,8 @@ void Matrix::display() const
 
 Matrix Matrix::multiply(const Matrix &other) const
 {
+    if (col != other.row)
+        throw std::runtime_error("cannot multiply");
     Matrix ret(row, other.col);
     for (int i=0; i<row; i++)
         for (int j=0; j<other.col; j++)
