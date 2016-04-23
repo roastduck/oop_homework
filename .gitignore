@@ -1,3 +1,6 @@
 *.swp
 *.zip
 *~
+*.thm
+*.log
+*.aux

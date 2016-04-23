@@ -1,0 +1,83 @@
+\documentclass[UTF8]{ctexart}
+    \title{\huge Code Reading Report V1}
+    \author{\large 2015011308 唐适之}
+    \date{}
+    \usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}
+    \usepackage{enumitem}
+	\usepackage{graphicx}
+	\usepackage{amsmath}
+	\usepackage{amssymb}
+	\usepackage[amsmath,thref,thmmarks]{ntheorem}
+
+\begin{document}
+    
+    \maketitle
+
+    \section{Building}
+        
+        The official \textit{LiquidFun Build and Run Instructinos} gives a specific building guide on different platforms. Here is a brief repeat on how to build it on a Linux, as well as something that is not mentioned in the official guide.
+
+        \subsection{Dependencies}
+
+            The official guide gives 3 minimum dependencies:
+            
+            \begin{itemize}
+                \item OpenGL: libglapi-mesa 8.0.4
+                \item GLU: libglu1-mesa-dev 8.0.4
+                \item cmake: 2.8.12.1
+            \end{itemize}
+
+            In a Debian origined Linux, like Ubuntu, they can be installed as below:
+
+            \begin{itemize}
+                \item sudo apt-get install cmake
+                \item sudo apt-get install libglapi-mesa
+                \item sudo apt-get install libglu1-mesa-dev
+            \end{itemize}
+
+            There might be two missing dependencies: \textit{X11 client-side library (Xlib)}, which provides an API to the basic X Window System, and \textit{X11 Input extension library (libXi)}, which provides an API to the XINPUT extension to the X protocol. In a Ubuntu system, it can be installed via \textit{sudo apt-get install libx11-dev libxi-dev}. If compiling without them, the compiler will report that it cannot find \textit{X11/Xlib.h} or \textit{X11/extensions/XInput2.h} especially.
+
+        \subsection{Compiling}
+
+            As described in the guide, we use \textit{cmake} to compile the project as below.
+
+            \begin{itemize}
+                \item \textit{cd liquidfun/Box2D} \# switch to the corresponding directory
+                \item \textit{cmake -G'Unix Makefiles'} \# generate Makefile using cmake
+                \item \textit{make}
+            \end{itemize}
+
+            In the ideal case, it should have been done, but there is a known issue in the CMakeLists.txt, which is used by cmake, even in the stable version. The CMakeLists.txt should have load the \textit{Thread} package to load a multithread library for the corresponding platform, the loading instruction is simply missing for some platforms. In this situation, try adding \textit{find\_package(Threads)} in the CMakeLists.txt. This rough patch may not work for every platform because the instruction might not needed on some platform, but it should resolve the issue when the problem truly happens.
+
+        \subsection{Run to test}
+
+            Under a full building, to determine whether we have complete a successful building, execute
+            
+            \textit{./liquidfun/Box2D/Testbed/Release/Testbed}
+            
+            to run a demo, or execute
+            
+            \textit{./liquidfun/Box2D/Unittests/run\_tests.sh}
+            
+            to run unit tests.
+
+    \section{Usage}
+
+        \textit{LiquidFun} is a library to calculate 2D rigid body and liquid physics, extended from \textit{Box2D}. It just does the math, but not includes the displaying function. We have to implement our own programs that makes use of \textit{LiquidFun}.
+        
+        \subsection{Using the Framework and Linking the Libraries}
+
+            Under a full building, the following parts will be built to their respective directives. (On a Linux platform)
+
+            \begin{itemize}
+                \item \textit{Box2D}. It's \textit{LiquidFun} itself, the core library.
+                \item \textit{HelloWorld}. A minimum demo consisting no GUI, just displying the calculated digits.
+                \item \textit{freeglut} and \textit{glui}. They are APIs to access OpenGL (a 3D graph library) easily, providing a basic UI library. They help to build a program that can display the result on screen as it is.
+                \item \textit{Testbed}. It's a demo or a UI program built to display the result, making use of \textit{freeglut} and \textit{glui}, so when we are working with \textit{LiquidFun}, it's no need to implement the display program by ourselves, even we have \textit{freeglut} or \textit{glui}. As the name indicates, \textit{Testbed} can also help do some debugging, such as printing debug info or doing step-by-step executing.
+                \item \textit{googletest}. It's a framework that help building unit tests.
+                \item \textit{Unittests}. Unit tests for \textit{LiquidFun}.
+            \end{itemize}
+            
+            If we tend to ignore the GUI, or to implement the UI by ourselves, we only need to include the headers and link the libraries in Box2D directive, Or we can put our code in the \textit{Testbed} and compile it together with the \textit{Testbed}.
+
+\end{document}
