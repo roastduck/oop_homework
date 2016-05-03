@@ -39,6 +39,7 @@ class OptRouter:public BaseRouter
     }
     
     const IPoint m_dir[4] = { IPoint(-1, 0, this), IPoint(0, 1, this), IPoint(1, 0, this), IPoint(0, -1, this) };
+    const char m_dir_name[4][7] = { "left", "up", "right", "down" };
     
 public:
     OptRouter(int r, int c, const Point &source, const Point &target, const PointVector &obs)

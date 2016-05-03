@@ -62,6 +62,11 @@ void OptRouter::mazeBacktrace()
                     journey[nexti].inList[dir] = true;
                     bfsList.push_front(make_pair(next, dir));
                     // enlist from the front because the weight is 0
+                    printf(
+                           "BackTrace grid [%d,%d] cost %d\n direction %s\n",
+                           next.m_x, next.m_y, m_grids[nexti], m_dir_name[journey[nexti].turn[dir]]
+                          );
+                    // wyl said I should print this
                 }
             }
         for (int k=0; k<4; k++)
@@ -74,12 +79,18 @@ void OptRouter::mazeBacktrace()
                 {
                     journey[posi].inList[k] = true;
                     bfsList.push_back(make_pair(pos, k));
+                    printf(
+                           "BackTrace grid [%d,%d] cost %d\n direction %s\n",
+                           pos.m_x, pos.m_y, m_grids[posi], m_dir_name[journey[posi].turn[k]]
+                          );
+                    // wyl said I should print this
                 }
             }
         journey[posi].inList[dir] = false;
     }
     
     int pos = m_sourceIndex, dir = journey[pos].minDir();
+    printf("Minimal turns: %d\n", journey[pos].turn[dir]);
     while (true)
     {
 		if (m_path.empty() || m_path.back() != pos)
