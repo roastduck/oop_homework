@@ -1,0 +1,5 @@
+res/any_test.cc
+res/arena_nc.cc
+res/descriptor.cc
+res/extension_set.cc
+res/text_format.cc
