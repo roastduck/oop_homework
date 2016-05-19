@@ -1,4 +1,4 @@
-ifeq (DEBUG, true)
+ifeq ($(DEBUG), true)
 	CPPFLAG = -g -Wall
 else
 	CPPFLAG = -O2 -DNDEBUG
