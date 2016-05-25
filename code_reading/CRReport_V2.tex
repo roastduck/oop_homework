@@ -123,7 +123,15 @@
             
             \textit{b2Fixture* CreateFixture(const b2FixtureDef *def)}
 
-            \noindent to create a \textit{b2Fixture} object and bind the newly created object to it.
+            \noindent to create a \textit{b2Fixture} object and bind the newly created object to it. Likely, \textit{b2Body} also has a \textit{DestroyFixture} member function to destroy a \textit{b2Fixture} object.
+
+            The diagram below shows how \textit{b2Body} creates and then plays as the host of \textit{b2Texture}.
+
+            \begin{figure}[ht]
+                \centering
+                \includegraphics[width=.8\textwidth]{factory.png}
+                \caption{Factory}
+            \end{figure}
 
             Because \textit{LiquidFun} will place a big amount of reletively small objects into the heap memory, which will reduce the performance, \textit{LiquidFun} implements its own heap memory allocator. Creating objects in the factory functions make calling the allocator organized, and therefore the end user don't have to be cencerned about the allocator.
 
@@ -137,9 +145,21 @@
 
             Take Contact Listener as an example. A Contact Listener aims to get call-back during different stages when \textit{LiquidFun} is processing collisions. \textit{LiquidFun} provides a class \textit{b2ContactListener} as a base class. \textit{b2ContactListener} provides member functions like \textit{BeginContact} or \textit{PreSolve}, the first of which will be called when a contact has first been detected, while the second will be called before a contact to be solved. Calling the base class will result in nothing. A User should implement his own class which inherits from \textit{b2ContactListener}, and override those member functions to do what he wants. To make \textit{LiquidFun} know about the listener objects, the user should register it to \textit{LiquidFun} using \textit{b2World::SetContactListener}. The \textit{b2World} object will therefore refer to it with a \textit{b2ContactListener*} pointer.
 
-            Another \textit{LiquidFun}'s listeners is Destruction Listener: \textit{b2DestructionListener}, which makes a great benefit to manage the pointers. When an object is destroied by \textit{LiquidFun}, \textit{LiquidFun} will call the corresponding listener, and users can therefore do some cleaning procedures, such as nullify the pointers. This prevent accessing to an invalid object.
+            Another \textit{LiquidFun}'s listener is Destruction Listener: \textit{b2DestructionListener}, which makes a great benefit to manage the pointers. When an object is destroied by \textit{LiquidFun}, \textit{LiquidFun} will call the corresponding listener, and users can therefore do some cleaning procedures, such as nullifying the pointers. This prevent accessing to an invalid object.
 
             C++11's lambda expression can also play the role as a listener, but defining a listener base class to be inherited from, like what \textit{LiquidFun} do, may make the code more structualized and reduce errors.
+
+        \subsection{Adaptor Pattern}
+        
+            There is a \textit{b2DistanceProxy} struct in \textit{LiquidFun}. The so called Proxy is actually an adaptor, which provides a consistant interface to help calculating the distance among all types of shapes. However, \textit{LiquidFun} does not implement this adaptor with polymorphism. It uses a switch-case closure in the initializer member function \textit{Set}, which retrieves consistant data from different shapes. Then it simply return these data from its member functions. The diagram below shows how it works.
+
+            \begin{figure}[ht]
+                \centering
+                \includegraphics[width=\textwidth]{distance_proxy.png}
+                \caption{Distance Proxy}
+            \end{figure}
+
+            This is actually against Open-Close Principles. But what is handled is simple enough to use switch-case, and defining one extra class for each type of shape seems wasting.
 
         \subsection{Plain Polymorphism}
 
@@ -147,7 +167,38 @@
 
             Templates can be used to help the base classes get to know the infomation about the subclasses. For example, \textit{b2TypedIntrusiveListNode<T>} is a node of an intrusive double linked list. The subclass \textit{b2ParticleHandle} extends \textit{b2TypedIntrusiveListNode<b2ParticleHandle>}, while subclass \textit{b2TrackedBlock} extends \textit{b2TypedIntrusiveListNode<b2TrackedBlock>}. So that the base class can determine which subclass extends it, from the template parameter, during compile time and make corresponding instructions. In this case of a node of a linked list, the compiler can allocate the data variable of each node of the corresponding type.
 
-            However, there is also what can't be done by C++'s polymorphis mechanism. Virtual functinos can handle most of the polymorphism, but when we query the size of a subclass during memory management, \textit{LiquidFun} have to use a \textit{switch} statement and do it manually.
+            However, there is also what can't be done by C++'s polymorphis mechanism. Virtual functions can handle most of the polymorphism, but when we query the size of a subclass during memory management, \textit{LiquidFun} have to use a \textit{switch} statement and do it manually.
+
+    \section{Data Structures}
+
+        \textit{LiquidFun} pays attention to time efficiency, and several data structures are therefore introduced to accelerate the procedures.
+
+        \subsection{Instrusive List}
+
+            A instrusive list is but not only is a double-linked list. In order to widely and flexibly use double-linked list, macros are used to intrusively bind a normal object with a node of a double-linked list. For example:
+
+            \begin{verbatim}
+1   class MyClass {
+2   public:
+3       MyClass(const char *msg) : m_msg(msg) {}
+4       const char* GetMessage() const { return m_msg; }
+5       B2_INTRUSIVE_LIST_GET_NODE(m_node);
+6       B2_INTRUSIVE_LIST_NODE_GET_CLASS(MyClass, m_node);
+7   private:
+8       b2IntrusiveListNode m_node;
+9       const char *m_msg;
+10  };
+            \end{verbatim}
+
+            \textit{B2\_INTRUSIVE\_LIST\_GET\_NODE} and \textit{B2\_INTRUSIVE\_LIST\_NODE\_GET\_CLASS} inserts related code into \textit{MyClass}, so as to bind \textit{MyClass} object with a \textit{b2IntrusiveListNode} object. These two objects store reference to each other, so users can easily either perform operations to the list or access the original object.
+
+        \subsection{Built-in Linked List}
+
+        Objects of \textit{b2Body}, \textit{b2Fixture}, \textit{b2Joint}, etc, are frequently delete, inserted or iterated and require no order. So there are built-in linked list with them. All of these classes have \textit{GetNext} member functions to acquire the next node, while their host class have \textit{Get***List} (such as \textit{GetBodyList}) member functions to aquire the head of the list. One can easily use a for-loop to do an iteration. Besides, uses don't have to be concerned about the list operations, because these object are created from the factories and deleted by the destroiers of their host (has been mentioned above), which take care of these operations.
+
+        \subsection{Dynamic Tree}
+
+            A dynamic tree is a binary tree which manages AABBs (i.e. Axis-Aligned minimum Bounding Box) with high performance. \textit{LiquidFun} makes use of this tree to perform fast position queries to the shapes. It also support calculating ray-cast.
 
     \section{Other Coding Skills}
         
@@ -156,6 +207,10 @@
             Creating an object like \textit{b2Body} or \textit{b2Fixture} may require a great amount of parameters, which make passing them one by one as parameters of creater functions (not sufficiently constructors here) impossible. \textit{LiquidFun} introduces definition classes, for instance, \textit{b2BodyDef} and \textit{b2FixtureDef}. Users construct a definition object first before passing it into the creater function.
 
             The creater functions won't keep references to the definition objects, and therefore the definition objects can be reused. Comparing to creating an empty object first, for example, an empty \textit{b2Body}, and then use the setter to set the parameters one by one, users can take advantage of the definition object reusing. One can stores a definition class and apply it to each creating procedures after minor modifications. Notice that \textit{b2Body} can not even be copied.
+
+        \subsection{Dump}
+
+            Lots of classes in \textit{LiquidFun} have a member function \textit{Dump}, which can be used to display debug infomations. The output format is designed carefully, which is actually C++ code. One can use these code to re-construct an object the same as the object that dumps. This greatly helps debug.
 
         \subsection{\textit{B2\_NOT\_USED}}
 
