@@ -16,7 +16,7 @@
 
     \section{Introduction}
 
-        This report describes the architecture and system design of \textit{LiquidFun}, including its components, workflow, advanced techniques, and key design principles. This is not a API reference, and will not cover all the detailed functions.
+        This report describes the architecture and system design of \textit{LiquidFun}, including its components, advanced techniques, and key design principles. This is not a API reference, and will not cover all the detailed functions.
 
         \textit{LiquidFun} is a 2D rigid-body and fluid simulation C++ library for games based upon \textit{Box2D}. It provides support for procedural animation of physical bodies to make objects move and interact in realistic ways\footnote{http://google.github.io/liquidfun/ Overview}. It brings particles to \textit{Box2D} so as to simulate fluid. \textit{LiquidFun} is not a physical simulator for scientific analysing. It provides an approximate but efficient way of calculation. \textit{LiquidFun} is either not a game framework. It only provides an interface to calculate the physics, but does not involves in displaying and controling.
 
@@ -93,7 +93,7 @@
 
             \begin{itemize}
                 \item Create a World. A \textit{b2World} object handles all infrastructural work, including memory allocating and objects management, so we should create a \textit{b2World} object first before adding objects to it.
-                \item Adding Objects. Several objects shold be added to \textit{b2World}, including \textit{b2Body}(s), which act as priticles, \textit{b2Fixture}(s), which give \textit{b2Body} shape and physical parameters, and other additional objects.
+                \item Adding Objects. Several objects shold be added to \textit{b2World}, including \textit{b2Body}(s), which act as rigid bodies, \textit{b2Fixture}(s), which give \textit{b2Body} shape and physical parameters, and other additional objects.
                 \item Call \textit{b2World::Step} to simulate the physics step by step with a discret time interval. Between each simulation, we can get access to the objects to get their parameters or make operations on them.
             \end{itemize}
 
@@ -149,9 +149,11 @@
 
             C++11's lambda expression can also play the role as a listener, but defining a listener base class to be inherited from, like what \textit{LiquidFun} do, may make the code more structualized and reduce errors.
 
-        \subsection{Adaptor Pattern}
+        \subsection{Proxy Pattern and Adaptor Pattern}
         
-            There is a \textit{b2DistanceProxy} struct in \textit{LiquidFun}. The so called Proxy is actually an adaptor, which provides a consistant interface to help calculating the distance among all types of shapes. However, \textit{LiquidFun} does not implement this adaptor with polymorphism. It uses a switch-case closure in the initializer member function \textit{Set}, which retrieves consistant data from different shapes. Then it simply return these data from its member functions. The diagram below shows how it works.
+            There is a \textit{b2DistanceProxy} struct in \textit{LiquidFun}. A \textit{b2DistanceProxy} stores a pointer to a \textit{b2Shape} object, as well as several extra data so as to help calculate the distance. When quering a \textit{b2Shape} object, there is no need to re-calculate that data. In fact, \textit{b2DistanceProxy} extends \textit{b2Shape}'s function as a proxy class. Struct \textit{b2FixtureProxy} plays a similar role as a proxy class.
+        
+            Notice that \textit{b2Shape} is a base class of a number of polymorphism subclasses, so \textit{b2DistanceProxy} is also an adaptor, which provides a consistant interface among all types of shapes. However, \textit{LiquidFun} does not implement this adaptor with polymorphism. It uses a switch-case closure in the initializer member function \textit{Set}, which retrieves consistant data from different shapes. Then it simply return these data from its member functions. The diagram below shows how it works.
 
             \begin{figure}[ht]
                 \centering
@@ -175,7 +177,7 @@
 
         \subsection{Instrusive List}
 
-            A instrusive list is but not only is a double-linked list. In order to widely and flexibly use double-linked list, macros are used to intrusively bind a normal object with a node of a double-linked list. For example:
+            An instrusive list is but not only is a double-linked list. In order to widely and flexibly use double-linked list, macros are used to intrusively bind a normal object with a node of a double-linked list. For example:
 
             \begin{verbatim}
 1   class MyClass {
@@ -194,7 +196,11 @@
 
         \subsection{Built-in Linked List}
 
-        Objects of \textit{b2Body}, \textit{b2Fixture}, \textit{b2Joint}, etc, are frequently delete, inserted or iterated and require no order. So there are built-in linked list with them. All of these classes have \textit{GetNext} member functions to acquire the next node, while their host class have \textit{Get***List} (such as \textit{GetBodyList}) member functions to aquire the head of the list. One can easily use a for-loop to do an iteration. Besides, uses don't have to be concerned about the list operations, because these object are created from the factories and deleted by the destroiers of their host (has been mentioned above), which take care of these operations.
+        Objects of \textit{b2Body}, \textit{b2Fixture}, \textit{b2Joint}, etc, are frequently delete, inserted or iterated and require no order. So there are built-in linked list with them. All of these classes have \textit{GetNext} member functions to acquire the next node, while their host class have \textit{Get***List} (such as \textit{GetBodyList}) member functions to aquire the head of the list. One can easily use a for-loop to do an iteration. Besides, users don't have to be concerned about the list operations, because these object are created from the factories and deleted by the destroiers of their host (has been mentioned above), which take care of these operations.
+
+        \subsection{Growable Buffer}
+
+            A Growable Buffer is just another implementation of \textit{std::vector} in STL. It stores objects in a continuous memory buffer, but supports inserting elements from the end. When the number of the elements is about to excess the buffer's limit, it will create a new buffer with doubled length and copy the data into the new one. The average time complexity of accessing or inserting an element is O(1).
 
         \subsection{Dynamic Tree}
 
