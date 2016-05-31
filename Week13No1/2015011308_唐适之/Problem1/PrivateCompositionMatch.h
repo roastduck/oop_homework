@@ -10,14 +10,7 @@ public:
     PrivateCompositionMatch(std::string patFileName, std::string inputFileName)
         : mKMP(patFileName, inputFileName) {}
     
-    std::vector<int> matchAll()
-    {
-        std::vector<int> matches;
-        int pos = 0;
-        while (~(pos = mKMP.match(pos)))
-            matches.push_back(pos), pos++;
-        return matches;
-    }
+    std::vector<int> matchAll();
     
 private:
     KMP mKMP;
