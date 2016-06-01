@@ -17,6 +17,6 @@ Force.o : Force.cpp Force.h
 	g++ Force.cpp -c $(PARAM)
 
 clean :
-	@$(RM) *.o *.gch main *.txt
+	@del *.o *.gch main *.txt
 
 .PHONY : clean
