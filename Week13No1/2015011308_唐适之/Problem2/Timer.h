@@ -23,10 +23,11 @@ public:
     /// @return : matching result
     std::vector<int> measure(const std::string &patFileName, const std::string &inputFileName)
     {
-        obj = new T(patFileName, inputFileName);
+        T *obj = new T(patFileName, inputFileName);
         if (! QueryPerformanceCounter(&winStart)) assert(false);
         std::vector<int> ret = obj->matchAll();
         if (! QueryPerformanceCounter(&winEnd)) assert(false);
+        delete obj;
         return ret;
     }
     
@@ -37,7 +38,6 @@ public:
     }
 
 private:
-    T *obj;
     LARGE_INTEGER winFreq, winStart, winEnd;
 };
 
